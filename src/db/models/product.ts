@@ -11,7 +11,8 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.User);
-      this.hasOne(models.OrderItem);
+      this.hasMany(models.CartItem);
+      this.hasMany(models.OrderItem);
     }
   }
 

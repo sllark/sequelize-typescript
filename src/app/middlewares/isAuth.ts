@@ -1,11 +1,14 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
 interface ErrorExtended extends Error {
   statusCode?: number;
 }
 
 export default (req, res, next) => {
-  const token = req.get("Authorization");
+  let token = req.get("Authorization");
+
+  token = token.split(" ")[1];
+  console.log(token);
 
   if (!token) {
     const error: ErrorExtended = new Error("Not Authorized");
@@ -15,8 +18,9 @@ export default (req, res, next) => {
 
   let decode;
   try {
-    decode = jwt.verify(token, "JWT_SECRET");
+    decode = jwt.verify(token, "SECRET_KEY");
   } catch (error) {
+    console.log(error);
     error.message = "Not Authorized";
     error.statusCode = 401;
     throw error;

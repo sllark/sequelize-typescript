@@ -2,7 +2,7 @@
 import { Model } from "sequelize";
 
 export default (sequelize, DataTypes) => {
-  class Order extends Model {
+  class Cart extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,18 +10,17 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.User, { through: "UsersOrders" });
-      this.hasMany(models.OrderItem);
+      this.hasOne(models.User);
+      this.hasMany(models.CartItem);
     }
   }
-  Order.init(
-    {
-      status: DataTypes.STRING,
-    },
+
+  Cart.init(
+    {},
     {
       sequelize,
-      modelName: "Order",
+      modelName: "Cart",
     }
   );
-  return Order;
+  return Cart;
 };

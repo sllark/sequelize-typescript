@@ -3,12 +3,11 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import { body } from "express-validator";
 
-import * as controllers from "../controllers/user";
+import * as controllers from "../controllers/product";
 import isAuth from "../middlewares/isAuth";
+import expressErrorHandler from "../middlewares/expressErrorHandler";
 
-const { User } = models;
-
-console.log(User);
+const { Product } = models;
 
 const router = express.Router();
 
@@ -21,7 +20,7 @@ router.post(
       .isEmail()
       .withMessage("Please enter a valid email")
       .custom(async (email) => {
-        const user = await User.findOne({
+        const user = await Product.findOne({
           where: { email },
           attributes: ["id"],
         });
@@ -32,10 +31,11 @@ router.post(
     body("last_name").notEmpty().withMessage("Last Name not Found!"),
     body("password").notEmpty().withMessage("Password not Found!"),
   ],
+  expressErrorHandler,
   asyncHandler(controllers.addUser)
 );
 
-router.put("/", asyncHandler(controllers.updateUser));
+router.put("/", isAuth, asyncHandler(controllers.updateUser));
 
 router.delete("/", asyncHandler(controllers.deleteUser));
 
